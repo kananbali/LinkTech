@@ -1,14 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-// PHP Data Objects(PDO) Sample Code:
-try {
-    $conn = new PDO("sqlsrv:server = tcp:linktechdbserver.database.windows.net,1433; Database = LinkTechDB", "cisco", "CompNet1234");
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-}
-catch (PDOException $e) {
-    print("Error connecting to SQL Server.");
-    die(print_r($e));
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get the email value from the form
+    $email = $_POST["email"];
+    // Database connection settings
+    $db_host = "your_database_host"; // Replace with your actual database host
+    $db_user = "your_database_username"; // Replace with your actual database username
+    $db_pass = "your_database_password"; // Replace with your actual database password
+    $db_name = "your_database_name"; // Replace with your actual database name
+    // Create a database connection
+    $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+    // Check the connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Prepare and execute the SQL query to insert the email into the database
+    $stmt = $conn->prepare("INSERT INTO your_table_name (email) VALUES (?)");
+    $stmt->bind_param("s", $email); // "s" indicates a string parameter, adjust if needed
+    $stmt->execute();
+
+    // Close the statement and connection
+    $stmt->close();
+    $conn->close();
+
+    // Redirect the user to a success page or show a success message
+    header("Location: success_page.html");
+    exit;
 }
 ?>
 <head> 
@@ -168,10 +188,9 @@ catch (PDOException $e) {
                     </div>
                     <div class="col-12 col-md-5 order-1 order-lg-2">
                           <h1 class="display-2 mb-3">Tools to advance in your career</h1>
-                          <p class="lead">Jobsapply helps you prepare and apply for jobs easily and get ahead of your competition.</p>
+                          <p class="lead">LinkTech helps you prepare and apply for jobs easily and get ahead of your competition.</p>
                           <div class="mt-4">
-                            <form action="#" class="d-flex flex-column mb-5 mb-lg-0">
-                                <input class="form-control" type="text" name="full-name" placeholder="Full name" required>
+                            <form action="store_email.php" class="d-flex flex-column mb-5 mb-lg-0" method="POST">
                                 <input class="form-control my-3" type="email" name="email" placeholder="Your email" required>
                                 <button class="btn btn-primary" type="submit">Create your account</button>
                                 <div class="form-group form-check mt-3">
