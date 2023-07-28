@@ -6,22 +6,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get the email value from the form
     $email = $_POST["email"];
     // Database connection settings
-    $db_host = "your_database_host"; // Replace with your actual database host
-    $db_user = "your_database_username"; // Replace with your actual database username
-    $db_pass = "your_database_password"; // Replace with your actual database password
-    $db_name = "your_database_name"; // Replace with your actual database name
+    $db_host = "linktechdbserver.database.windows.net"; // Replace with your actual database host
+    $db_user = "cisco"; // Replace with your actual database username
+    $db_pass = "CompNet1234"; // Replace with your actual database password
+    $db_name = "LinkTechDB"; // Replace with your actual database name
     // Create a database connection
     $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+
     // Check the connection
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
-
     // Prepare and execute the SQL query to insert the email into the database
-    $stmt = $conn->prepare("INSERT INTO your_table_name (email) VALUES (?)");
+    $stmt = $conn->prepare("INSERT INTO LinkTechDB (email) VALUES (?)");
     $stmt->bind_param("s", $email); // "s" indicates a string parameter, adjust if needed
     $stmt->execute();
-
     // Close the statement and connection
     $stmt->close();
     $conn->close();
